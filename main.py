@@ -7,13 +7,10 @@ Options = {
     'verify': True
 }
 
-jira = JIRA(options=Options, basic_auth=('jj@anbast.com', "1QqfZ5AYASQ9ydwU5J977675"))
+jira = JIRA(options=Options, basic_auth=('jj@anbast.com', "EpuTwjVN6Un5g5Au5lOwFAF4"))
 
-filter = jira.filter(18839)
+filter = jira.filter(19012)
 print(filter)
-""" issue = jira.issue('PUR-12792')
-print(issue.key)
-print(issue.fields.summary) """
 
 """ data = Path("index.html").read_text().replace('\n', ' ')
 output = data[2:]
