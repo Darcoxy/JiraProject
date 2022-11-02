@@ -5,7 +5,7 @@ import json
 def getFilter():
     url = 'https://anbast.atlassian.net/rest/api/3/filter/19012'
 
-    auth = HTTPBasicAuth('jj@anbast.com', 'njJpXckRq80MU5kqmquH52F4')
+    auth = HTTPBasicAuth('jj@anbast.com', 'lH37epa48lBGDcT3YkXW43B0')
 
     headers = {
         'Accept': 'application/json'
@@ -18,6 +18,7 @@ def getFilter():
         auth=auth
     )
     print(json.dumps(json.loads(response.text), sort_keys=True, indent=4, separators=(",", ": ")))
+    print(response)
 
 def updateFilter():
     url = 'https://anbast.atlassian.net/rest/api/3/filter/19012'
@@ -43,7 +44,6 @@ def updateFilter():
         auth=auth
     )
     #print(json.dumps(json.loads(response.text), sort_keys=True, indent=4, separators=(",", ": "))) 
-    print(response)
 
 updateFilter()
 #getFilter()
