@@ -23,7 +23,7 @@ def getFilter():
 def updateFilter():
     url = 'https://anbast.atlassian.net/rest/api/3/filter/19012'
 
-    auth = HTTPBasicAuth("email@example.com", "<2KNOwTz5LRp5kTKWcYLk6EF3>")
+    auth = HTTPBasicAuth("email@example.com", "<dSbhIIIpsIllkjhSbpiND256>")
 
     headers = {
         "Accept": "application/json",
@@ -43,7 +43,19 @@ def updateFilter():
         headers=headers,
         auth=auth
     )
-    print(json.dumps(json.loads(response.text), sort_keys=True, indent=4, separators=(",", ": ")))
+    print(response)
 
-updateFilter()
+def checkIfJiraWorks():
+    Options = {
+    'server': 'https://anbast.atlassian.net/',
+    'verify': True
+    }
+
+    jira = JIRA(options=Options, basic_auth=('jj@anbast.com', "njJpXckRq80MU5kqmquH52F4"))
+
+    testFilter = jira.filter(19012)
+    print(testFilter)
+
+checkIfJiraWorks()
 #getFilter()
+#pdateFilter()
