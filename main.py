@@ -18,15 +18,18 @@ patchVersion = output.split('<')[0]
 testVersion = output.split('>')[1].replace(" ", "")
 
 #This will make the JQL react to changes to versions of PurGo
-testJQL = 'project = PUR AND fixVersion >= 1.65.0 and fixVersion <=' +  testVersion
+testJQL = 'project = PUR AND fixVersion >= 1.65.0 and fixVersion <=' + testVersion
 patchJQL = 'project = PUR AND fixVersion >= 1.61.0 and fixVersion <=' + patchVersion
 
-#This will clip the end of the JQL so that it is admissable for Jira
-testSize = len(testJQL)
-patchSize = len(patchJQL)
-testJQL = testJQL[:testSize - 2]
-patchJQL = patchJQL[:patchSize -2]
+#This will remove unicode from the string so that JQL likes it
+patchJQL = patchJQL.replace('\u0000', '')
+testJQL = testJQL.replace('\u0000', '')
+
+print(testJQL)
+print(patchJQL)
+print(testJQL[58])
+print(patchJQL[58])
 
 #This will update the Jira filters 
 updatePatchFilter = jira.update_filter(19012, 'JiraProjectPatchQueue', 'Updated Patch Queue with Script', patchJQL)
-updateTestFilter = jira.update_filter(19013, 'JiraProjectTestQueue', 'Updated Test Queue with Script', testJQL)
+#updateTestFilter = jira.update_filter(19013, 'JiraProjectTestQueue', 'Updated Test Queue with Script', testJQL)
