@@ -13,7 +13,7 @@ headers = {
 
 payload = json.dumps( {
     'jql': 'type = project = PUR AND fixVersion >= 1.61.0 and fixVersion <= 1.63.77',
-    'name': 'Updated JJ Test Filter',
+    'name': 'UpdatedTestingJiraProject',
     'description': 'Update from 02/11/2022'
 })
 
