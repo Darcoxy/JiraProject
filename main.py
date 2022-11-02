@@ -3,14 +3,12 @@ from jira import JIRA
 from ssl import Options
 from pathlib import Path
 
-os.environ["ApiKey"] = 'dujNrWoMTnUGIUy1rDFjF35D'
-
 Options = {
     'server': 'https://anbast.atlassian.net/',
     'verify': True
 }
 
-jira = JIRA(options=Options, basic_auth=('jj@anbast.com', os.getenv("ApiKey")))
+jira = JIRA(options=Options, basic_auth=('jj@anbast.com', os.getenv("JirApiToken")))
 
 data = Path("index.html").read_text().replace('\n', ' ')
 output = data[2:]
