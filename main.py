@@ -21,15 +21,13 @@ testVersion = output.split('>')[1].replace(" ", "")
 testJQL = 'project = PUR AND fixVersion >= 1.65.0 and fixVersion <=' + testVersion
 patchJQL = 'project = PUR AND fixVersion >= 1.61.0 and fixVersion <=' + patchVersion
 
-#This will remove unicode from the string so that JQL likes it
-patchJQL = patchJQL.replace('\u0000', '')
-testJQL = testJQL.replace('\u0000', '')
+testJQL.join(testVersion)
+patchJQL.join(patchVersion)
 
-print(testJQL)
-print(patchJQL)
-print(testJQL[58])
-print(patchJQL[58])
+#This will remove unicode from the string so that JQL likes it
+patchJQL = patchJQL.replace('\u0000', '').rstrip()
+testJQL = testJQL.replace('\u0000', '').rstrip()
 
 #This will update the Jira filters 
-updatePatchFilter = jira.update_filter(19012, 'JiraProjectPatchQueue', 'Updated Patch Queue with Script', patchJQL)
-#updateTestFilter = jira.update_filter(19013, 'JiraProjectTestQueue', 'Updated Test Queue with Script', testJQL)
+updatePatchFilter = jira.update_filter(19012, 'JiraProjectPatchQueue', 'Updated Patch Queue with Script', patchJQL[:-2])
+updateTestFilter = jira.update_filter(19013, 'JiraProjectTestQueue', 'Updated Test Queue with Script', testJQL[:-2])
