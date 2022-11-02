@@ -1,4 +1,5 @@
 from pathlib import Path
 
 data = Path("index.html").read_text().replace('\n', ' ')
-print(data)
+output = data[2:]
+print(output)
