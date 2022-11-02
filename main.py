@@ -8,7 +8,7 @@ Options = {
     'verify': True
 }
 
-jira = JIRA(options=Options, basic_auth=('jj@anbast.com', os.getenv("JirApiToken")))
+jira = JIRA(options=Options, basic_auth=('jj@anbast.com', os.environ.get("JIRAAPITOKEN")))
 
 #This will read the html file with version numbers and then split them to seperate 
 #environments version numbers 
@@ -27,7 +27,6 @@ patchSize = len(patchJQL)
 testJQL = testJQL[:testSize - 2]
 patchJQL = patchJQL[:patchSize -2]
 
-#This will update the Jira filter 
+#This will update the Jira filters 
 updatePatchFilter = jira.update_filter(19012, 'JiraProjectPatchQueue', 'Updated Patch Queue with Script', patchJQL)
-
 updateTestFilter = jira.update_filter(19013, 'JiraProjectTestQueue', 'Updated Test Queue with Script', testJQL)
