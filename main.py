@@ -8,6 +8,6 @@ jira = JIRA('https://anbast.atlassian.net/')
 data = Path("index.html").read_text().replace('\n', ' ')
 output = data[2:]
 patchVersion = output.split('<')[0]
-testVersion = output.split('>')[1]
+testVersion = output.split('>')[1].replace(" ", "")
 print(patchVersion)
 print(testVersion)
