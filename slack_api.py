@@ -1,8 +1,9 @@
 import requests
 import json
+import os
 
-slack_token = 'xoxb-194855553623-4340538178368-rXkrkGz0idMwUVqBBhMD5cUZ'
-slack_channel = '#testerskie_ploty'
+slack_token = os.getenv('SLACKAPITOKEN')
+slack_channel = '#testing_bot'
 
 def post_message_to_slack(text, blocks = None):
     return requests.post('https://slack.com/api/chat.postMessage', {
