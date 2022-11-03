@@ -10,14 +10,16 @@ Options = {
     'verify': True
 }
 
+#This is where you add token and channel to send message to
 slack_token = os.getenv('SLACKAPITOKEN')
 slack_channel = '#testing_bot'
+filter_url = 'https://anbast.atlassian.net/issues/?filter=19013'
 
 def post_message_to_slack(text, blocks = None):
     return requests.post('https://slack.com/api/chat.postMessage', {
         'token': slack_token,
         'channel': slack_channel,
-        'text': 'Nowe bugi weszły w nowej wersji',
+        'text': filter_url,
         'username': 'JiraUpdateTestingQueues',
         'blocks': json.dumps(blocks) if blocks else None
     }).json()
@@ -44,6 +46,6 @@ patchJQL = patchJQL.replace('\u0000', '').rstrip()
 testJQL = testJQL.replace('\u0000', '').rstrip()
 
 #This will update the Jira filters 
-#updatePatchFilter = jira.update_filter(19012, 'JiraProjectPatchQueue', 'Updated Patch Queue with Script', patchJQL[:-2])
-#updateTestFilter = jira.update_filter(19013, 'JiraProjectTestQueue', 'Updated Test Queue with Script', testJQL[:-2])
+updatePatchFilter = jira.update_filter(19012, 'JiraProjectPatchQueue', 'Updated Patch Queue with Script', patchJQL[:-2])
+updateTestFilter = jira.update_filter(19013, 'JiraProjectTestQueue', 'Updated Test Queue with Script', testJQL[:-2])
 post_message_to_slack('testing')
