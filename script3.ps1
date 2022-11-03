@@ -1,0 +1,2 @@
+cd JiraProject
+./main.py
