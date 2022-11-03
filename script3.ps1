@@ -1,2 +1,2 @@
-cd JiraProject
+Set-Location JiraProject
 ./main.py
