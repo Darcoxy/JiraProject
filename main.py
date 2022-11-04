@@ -9,7 +9,9 @@ from pathlib import Path
 slack_token = os.getenv('SLACKAPITOKEN')
 jira_token = os.getenv('JIRAAPITOKEN')
 slack_channel = '#testing_bot'
-filter_url = 'https://anbast.atlassian.net/issues/?filter=19013'
+test_filter_url = 'https://anbast.atlassian.net/issues/?filter=19013'
+patch_filter_url = 'https://anbast.atlassian.net/issues/?filter=19012'
+both_filters_url = test_filter_url + '\n ' + patch_filter_url
 released_patch_version = '1.63.78'
 released_test_version = '1.65.20'
 patch_version_changed = False
@@ -38,7 +40,7 @@ def get_test_version_number():
 def set_version_numbers():
     global released_patch_version
     global released_test_version
-    
+
     new_patch_version = get_patch_version_number()
     new_test_version = get_test_version_number()
 
@@ -73,7 +75,7 @@ def post_message_to_slack(text, blocks = None):
     return requests.post('https://slack.com/api/chat.postMessage', {
         'token': slack_token,
         'channel': slack_channel,
-        'text': filter_url,
+        'text': both_filters_url,
         'username': 'JiraUpdateTestingQueues',
         'blocks': json.dumps(blocks) if blocks else None
     }).json()
@@ -94,4 +96,4 @@ if patch_version_changed == True:
 else:
     print("test filter not changed")
 
-#post_message_to_slack('testing')
+post_message_to_slack('testing')
