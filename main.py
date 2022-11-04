@@ -17,20 +17,27 @@ Options = {
     'verify': True
 }
 
-#This will read the version numbers from the html file and return them in a list
-def get_purgo_version_numbers():
+#This will read the patch version number and return it
+def get_patch_version_number():
     data = Path("index.html").read_text().replace('\n', ' ')
     output = data[2:]
     patchVersion = output.split('<')[0]
+    print("get_patch_version_number")
+    return(patchVersion)
+
+#This will read the test version number and return it
+def get_test_version_number():
+    data = Path("index.html").read_text().replace('\n', ' ')
+    output = data[2:]
     testVersion = output.split('>')[1].replace(" ", "")
-    print("get_purgo_version_numbers")
-    return([patchVersion, testVersion])
+    print("get_test_version_number")
+    return(testVersion)
 
 #This will update the patch filter
 def update_patch_filter():
     jira = JIRA(options=Options, basic_auth=('jj@anbast.com', jira_token))
-    patchJQL = 'project = PUR AND fixVersion >= 1.61.0 and fixVersion <=' + get_purgo_version_numbers(0)
-    patchJQL.join(get_purgo_version_numbers(0))
+    patchJQL = 'project = PUR AND fixVersion >= 1.61.0 and fixVersion <=' + get_patch_version_number()
+    patchJQL.join(get_patch_version_number())
     patchJQL = patchJQL.replace('\u0000', '').rstrip()
     updatePatchFilter = jira.update_filter(19012, 'JiraProjectPatchQueue', 'Updated Patch Queue with Script', patchJQL[:-2])
     print("update_patch_filter")
@@ -38,8 +45,8 @@ def update_patch_filter():
 #This will update the test filter
 def update_test_filter():
     jira = JIRA(options=Options, basic_auth=('jj@anbast.com', jira_token))
-    testJQL = 'project = PUR AND fixVersion >= 1.65.0 and fixVersion <=' + get_purgo_version_numbers(1)
-    testJQL.join(get_purgo_version_numbers(1))
+    testJQL = 'project = PUR AND fixVersion >= 1.65.0 and fixVersion <=' + get_test_version_number()
+    testJQL.join(get_test_version_number())
     testJQL = testJQL.replace('\u0000', '').rstrip()
     updateTestFilter = jira.update_filter(19013, 'JiraProjectTestQueue', 'Updated Test Queue with Script', testJQL[:-2])
     print("update_test_filter")
@@ -55,7 +62,6 @@ def post_message_to_slack(text, blocks = None):
     }).json()
 
 #Function Calls
-get_purgo_version_numbers()
 update_patch_filter()
 update_test_filter()
 post_message_to_slack('testing')
