@@ -25,28 +25,31 @@ Options = {
 def get_patch_version_number():
     data = Path("index.html").read_text().replace('\n', ' ')
     output = data
-    patchVersion = output.split('<')[0]
+    patchVersion = output.split('<')[0].rstrip()
     return(patchVersion)
 
 #This will read the test version number and return it
 def get_test_version_number():
     data = Path("index.html").read_text().replace('\n', ' ')
-    output = data[2:]
+    output = data
     testVersion = output.split('>')[1].replace(" ", "")
     return(testVersion)
 
 def set_version_numbers():
+    global released_patch_version
+    global released_test_version
+    
     new_patch_version = get_patch_version_number()
     new_test_version = get_test_version_number()
 
-    global released_patch_version
     if new_patch_version != released_patch_version:
         released_patch_version = new_patch_version
+        global patch_version_changed
         patch_version_changed = True
 
-    global released_test_version
     if new_test_version != released_test_version:
         released_test_version = new_test_version
+        global test_version_changed
         test_version_changed = True
 
 #This will update the patch filter
