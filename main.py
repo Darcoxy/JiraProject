@@ -17,15 +17,6 @@ Options = {
     'verify': True
 }
 
-def post_message_to_slack(text, blocks = None):
-    return requests.post('https://slack.com/api/chat.postMessage', {
-        'token': slack_token,
-        'channel': slack_channel,
-        'text': filter_url,
-        'username': 'JiraUpdateTestingQueues',
-        'blocks': json.dumps(blocks) if blocks else None
-    }).json()
-
 #This will read the version numbers from the html file and return them in a list
 def get_purgo_version_numbers():
     data = Path("index.html").read_text().replace('\n', ' ')
@@ -54,4 +45,17 @@ def update_test_filter():
     print("update_test_filter")
 
 #This will post a message to slack
+def post_message_to_slack(text, blocks = None):
+    return requests.post('https://slack.com/api/chat.postMessage', {
+        'token': slack_token,
+        'channel': slack_channel,
+        'text': filter_url,
+        'username': 'JiraUpdateTestingQueues',
+        'blocks': json.dumps(blocks) if blocks else None
+    }).json()
+
+#Function Calls
+get_purgo_version_numbers()
+update_patch_filter()
+update_test_filter()
 post_message_to_slack('testing')
