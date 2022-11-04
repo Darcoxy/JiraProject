@@ -24,7 +24,7 @@ Options = {
 #This will read the patch version number and return it
 def get_patch_version_number():
     data = Path("index.html").read_text().replace('\n', ' ')
-    output = data[2:]
+    output = data
     patchVersion = output.split('<')[0]
     return(patchVersion)
 
@@ -38,10 +38,13 @@ def get_test_version_number():
 def set_version_numbers():
     new_patch_version = get_patch_version_number()
     new_test_version = get_test_version_number()
+
+    global released_patch_version
     if new_patch_version != released_patch_version:
         released_patch_version = new_patch_version
         patch_version_changed = True
 
+    global released_test_version
     if new_test_version != released_test_version:
         released_test_version = new_test_version
         test_version_changed = True
@@ -73,6 +76,7 @@ def post_message_to_slack(text, blocks = None):
     }).json()
 
 #Function Calls
+set_version_numbers()
 if test_version_changed == True:
     update_test_filter()
     test_version_changed = False
@@ -87,4 +91,4 @@ if patch_version_changed == True:
 else:
     print("test filter not changed")
 
-post_message_to_slack('testing')
+#post_message_to_slack('testing')
