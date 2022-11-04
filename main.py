@@ -98,19 +98,20 @@ def post_message_to_slack(text, blocks = None):
         'username': 'JiraUpdateTestingQueues',
         'blocks': json.dumps(blocks) if blocks else None
     }).json()
+    test_version_changed = False
+    patch_version_changed = False
 
 #Function Calls
 set_version_numbers()
 if test_version_changed == True:
     update_test_filter()
-    test_version_changed = False
+    
     print("updated test filter")
 else:
     print("patch version not changed")
 
 if patch_version_changed == True:
     update_patch_filter()
-    patch_version_changed = False
     print("updated patch filter")
 else:
     print("test filter not changed")
