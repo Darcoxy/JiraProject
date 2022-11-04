@@ -12,8 +12,8 @@ slack_channel = '#testing_bot'
 test_filter_url = 'https://anbast.atlassian.net/issues/?filter=19013'
 patch_filter_url = 'https://anbast.atlassian.net/issues/?filter=19012'
 both_filters_url = test_filter_url + '\n ' + patch_filter_url
-released_patch_version = '1.63.78'
-released_test_version = '1.65.20'
+released_patch_version = '1.63.77'
+released_test_version = '1.65.19'
 patch_version_changed = False
 test_version_changed = False
 
@@ -72,10 +72,29 @@ def update_test_filter():
 
 #This will post a message to slack
 def post_message_to_slack(text, blocks = None):
-    return requests.post('https://slack.com/api/chat.postMessage', {
+    global test_version_changed
+    global patch_version_changed
+    if test_version_changed == True & patch_version_changed == True:
+        return requests.post('https://slack.com/api/chat.postMessage', {
         'token': slack_token,
         'channel': slack_channel,
         'text': both_filters_url,
+        'username': 'JiraUpdateTestingQueues',
+        'blocks': json.dumps(blocks) if blocks else None
+    }).json()
+    elif test_version_changed == True:
+        return requests.post('https://slack.com/api/chat.postMessage', {
+        'token': slack_token,
+        'channel': slack_channel,
+        'text': test_filter_url,
+        'username': 'JiraUpdateTestingQueues',
+        'blocks': json.dumps(blocks) if blocks else None
+    }).json()
+    elif patch_version_changed == True:
+        return requests.post('https://slack.com/api/chat.postMessage', {
+        'token': slack_token,
+        'channel': slack_channel,
+        'text': patch_filter_url,
         'username': 'JiraUpdateTestingQueues',
         'blocks': json.dumps(blocks) if blocks else None
     }).json()
@@ -97,3 +116,4 @@ else:
     print("test filter not changed")
 
 post_message_to_slack('testing')
+print("posted a message to slack")
