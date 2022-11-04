@@ -10,6 +10,10 @@ slack_token = os.getenv('SLACKAPITOKEN')
 jira_token = os.getenv('JIRAAPITOKEN')
 slack_channel = '#testing_bot'
 filter_url = 'https://anbast.atlassian.net/issues/?filter=19013'
+released_patch_version = '1.63.78'
+released_test_version = '1.65.20'
+patch_version_changed = False
+test_version_changed = False
 
 #This is a required dictionary for Jira to know where to connect and to know to verify
 Options = {
@@ -30,6 +34,17 @@ def get_test_version_number():
     output = data[2:]
     testVersion = output.split('>')[1].replace(" ", "")
     return(testVersion)
+
+def set_version_numbers():
+    new_patch_version = get_patch_version_number()
+    new_test_version = get_test_version_number()
+    if new_patch_version != released_patch_version:
+        released_patch_version = new_patch_version
+        patch_version_changed = True
+
+    if new_test_version != released_test_version:
+        released_test_version = new_test_version
+        test_version_changed = True
 
 #This will update the patch filter
 def update_patch_filter():
@@ -58,6 +73,18 @@ def post_message_to_slack(text, blocks = None):
     }).json()
 
 #Function Calls
-update_patch_filter()
-update_test_filter()
+if test_version_changed == True:
+    update_test_filter()
+    test_version_changed = False
+    print("updated test filter")
+else:
+    print("patch version not changed")
+
+if patch_version_changed == True:
+    update_patch_filter()
+    patch_version_changed = False
+    print("updated test filter")
+else:
+    print("test filter not changed")
+    
 post_message_to_slack('testing')
