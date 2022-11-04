@@ -22,7 +22,6 @@ def get_patch_version_number():
     data = Path("index.html").read_text().replace('\n', ' ')
     output = data[2:]
     patchVersion = output.split('<')[0]
-    print("get_patch_version_number")
     return(patchVersion)
 
 #This will read the test version number and return it
@@ -30,7 +29,6 @@ def get_test_version_number():
     data = Path("index.html").read_text().replace('\n', ' ')
     output = data[2:]
     testVersion = output.split('>')[1].replace(" ", "")
-    print("get_test_version_number")
     return(testVersion)
 
 #This will update the patch filter
@@ -40,7 +38,6 @@ def update_patch_filter():
     patchJQL.join(get_patch_version_number())
     patchJQL = patchJQL.replace('\u0000', '').rstrip()
     updatePatchFilter = jira.update_filter(19012, 'JiraProjectPatchQueue', 'Updated Patch Queue with Script', patchJQL[:-2])
-    print("update_patch_filter")
 
 #This will update the test filter
 def update_test_filter():
@@ -49,7 +46,6 @@ def update_test_filter():
     testJQL.join(get_test_version_number())
     testJQL = testJQL.replace('\u0000', '').rstrip()
     updateTestFilter = jira.update_filter(19013, 'JiraProjectTestQueue', 'Updated Test Queue with Script', testJQL[:-2])
-    print("update_test_filter")
 
 #This will post a message to slack
 def post_message_to_slack(text, blocks = None):
