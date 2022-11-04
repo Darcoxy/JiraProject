@@ -83,8 +83,8 @@ else:
 if patch_version_changed == True:
     update_patch_filter()
     patch_version_changed = False
-    print("updated test filter")
+    print("updated patch filter")
 else:
     print("test filter not changed")
-    
+
 post_message_to_slack('testing')
