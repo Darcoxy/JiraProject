@@ -57,7 +57,7 @@ def set_version_numbers():
 #This will update the patch filter
 def update_patch_filter():
     jira = JIRA(options=Options, basic_auth=('jj@anbast.com', jira_token))
-    patchJQL = 'project = PUR AND fixVersion >= 1.61.0 and fixVersion <=' + get_patch_version_number()
+    patchJQL = 'project = PUR AND status = testing AND fixVersion >= 1.61.0 and fixVersion <=' + get_patch_version_number()
     patchJQL.join(get_patch_version_number())
     patchJQL = patchJQL.replace('\u0000', '').rstrip()
     updatePatchFilter = jira.update_filter(19012, 'JiraProjectPatchQueue', 'Updated Patch Queue with Script', patchJQL[:-2])
@@ -65,7 +65,7 @@ def update_patch_filter():
 #This will update the test filter
 def update_test_filter():
     jira = JIRA(options=Options, basic_auth=('jj@anbast.com', jira_token))
-    testJQL = 'project = PUR AND fixVersion >= 1.65.0 and fixVersion <=' + get_test_version_number()
+    testJQL = 'project = PUR AND status = testing AND fixVersion >= 1.65.0 and fixVersion <=' + get_test_version_number()
     testJQL.join(get_test_version_number())
     testJQL = testJQL.replace('\u0000', '').rstrip()
     updateTestFilter = jira.update_filter(19013, 'JiraProjectTestQueue', 'Updated Test Queue with Script', testJQL[:-2])
