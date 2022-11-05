@@ -117,4 +117,5 @@ def mainLogic():
 
 #Function calls
 set_version_numbers()
+mainLogic()
 post_message_to_slack('testing')
