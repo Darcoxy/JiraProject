@@ -26,7 +26,7 @@ Options = {
 #This will read the patch version number and return it
 def get_patch_version_number():
     data = Path("index.txt").read_text().replace('\n', ' ')
-    output = data
+    output = data[3:]
     patchVersion = output.split(',')[0].rstrip()
     return(patchVersion)
 
