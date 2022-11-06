@@ -25,16 +25,16 @@ Options = {
 
 #This will read the patch version number and return it
 def get_patch_version_number():
-    data = Path("index.html").read_text().replace('\n', ' ')
+    data = Path("index.txt").read_text().replace('\n', ' ')
     output = data
-    patchVersion = output.split('<')[0].rstrip()
+    patchVersion = output.split(',')[0].rstrip()
     return(patchVersion)
 
 #This will read the test version number and return it
 def get_test_version_number():
-    data = Path("index.html").read_text().replace('\n', ' ')
+    data = Path("index.txt").read_text().replace('\n', ' ')
     output = data
-    testVersion = output.split('>')[1].replace(" ", "")
+    testVersion = output.split(',')[1].replace(" ", "")
     return(testVersion)
 
 def set_version_numbers():
