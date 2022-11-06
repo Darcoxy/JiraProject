@@ -25,14 +25,14 @@ Options = {
 
 #This will read the patch version number and return it
 def get_patch_version_number():
-    data = Path("index.txt").read_text().replace('\n', ' ')
-    output = data[3:]
+    data = Path("index.txt").read_text(encoding='utf-16 LE')
+    output = data
     patchVersion = output.split(',')[0].rstrip()
-    return(patchVersion)
+    return(patchVersion[1:])
 
 #This will read the test version number and return it
 def get_test_version_number():
-    data = Path("index.txt").read_text().replace('\n', ' ')
+    data = Path("index.txt").read_text(encoding='utf-16 LE')
     output = data
     testVersion = output.split(',')[1].replace(" ", "")
     return(testVersion)
