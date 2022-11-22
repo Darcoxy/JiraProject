@@ -14,8 +14,8 @@ slack_channel = '#testing_bot'
 test_filter_url = 'https://anbast.atlassian.net/issues/?filter=19013'
 patch_filter_url = 'https://anbast.atlassian.net/issues/?filter=19012'
 both_filters_url = test_filter_url + '\n ' + patch_filter_url
-released_patch_version = '1.63.77'
-released_test_version = '1.65.19'
+released_patch_version = ''
+released_test_version = ''
 patch_version_changed = False
 test_version_changed = False
 errors_updating_test_filter = False
@@ -40,6 +40,29 @@ def get_test_version_number():
     output = data
     testVersion = output.split(',')[1].replace(" ", "")
     return(testVersion)
+
+def update_released_patch_version():
+    version = get_patch_version_number()
+    f = open('current_versions.txt', 'w')
+    f.write(version + '\n' + ',')
+    f.close()
+    print()
+
+def update_released_test_version():
+    version = get_test_version_number()
+    f = open('current_versions.txt', 'a')
+    f.write(version)
+    print()
+
+def set_released_test_version():
+    data = Path('current_versions.txt').read_text(encoding='utf-16 LE')
+    output = data
+    released_test_version = output.split(',')[1].replace(" ", "")
+
+def set_released_patch_version():
+    data = Path('current_versions.txt').read_text(encoding='utf-16 LE')
+    output = data
+    released_patch_version = output.split(',')[0].rstrip()
 
 def set_version_numbers():
     global released_patch_version
@@ -138,11 +161,8 @@ def post_message_to_slack(text, blocks = None):
     patch_version_changed = False
 
 def mainLogic():
-    # if errors_updating_test_filter:
-    #     print('Errors updating test filter')
-    # elif errors_updating_patch_filter:
-    #     print('Errors updating patch filter!')
-
+    update_released_patch_version()
+    update_released_test_version()
     if test_version_changed == True:
         update_test_filter()
         if errors_updating_test_filter:
