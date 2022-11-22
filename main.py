@@ -105,7 +105,10 @@ def update_test_filter():
 def post_message_to_slack(text, blocks = None):
     global test_version_changed
     global patch_version_changed
-    if test_version_changed and patch_version_changed:
+    global errors_updating_patch_filter
+    global errors_updating_test_filter
+
+    if test_version_changed and patch_version_changed and errors_updating_test_filter == False and errors_updating_patch_filter == False:
         return requests.post('https://slack.com/api/chat.postMessage', {
         'token': slack_token,
         'channel': slack_channel,
@@ -114,6 +117,8 @@ def post_message_to_slack(text, blocks = None):
         'blocks': json.dumps(blocks) if blocks else None
     }).json()
     elif test_version_changed:
+        if errors_updating_test_filter:
+            pass
         return requests.post('https://slack.com/api/chat.postMessage', {
         'token': slack_token,
         'channel': slack_channel,
@@ -122,6 +127,8 @@ def post_message_to_slack(text, blocks = None):
         'blocks': json.dumps(blocks) if blocks else None
     }).json()
     elif patch_version_changed:
+        if errors_updating_patch_filter:
+            pass
         return requests.post('https://slack.com/api/chat.postMessage', {
         'token': slack_token,
         'channel': slack_channel,
