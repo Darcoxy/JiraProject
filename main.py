@@ -1,5 +1,6 @@
 import os
 import json
+import sys
 import requests
 from jira import JIRA
 from ssl import Options
@@ -64,6 +65,7 @@ def update_patch_filter():
         updatePatchFilter = jira.update_filter(19012, 'JiraProjectPatchQueue', 'Updated Patch Queue with Script', patchJQL[:-2])
     except:
         print('An error occured!')
+        sys.exit(1)
 
 #This will update the test filter
 def update_test_filter():
@@ -75,6 +77,7 @@ def update_test_filter():
         updateTestFilter = jira.update_filter(19013, 'JiraProjectTestQueue', 'Updated Test Queue with Script', testJQL[:-2])
     except:
         print('An error occured!')
+        sys.exit(1)
 
 #This will post a message to slack
 def post_message_to_slack(text, blocks = None):
