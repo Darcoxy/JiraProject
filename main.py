@@ -1,7 +1,9 @@
 import os
 import json
+import sys
 import requests
 from jira import JIRA
+from jira import JIRAError
 from ssl import Options
 from pathlib import Path
 
@@ -16,6 +18,8 @@ released_patch_version = '1.63.77'
 released_test_version = '1.65.19'
 patch_version_changed = False
 test_version_changed = False
+errors_updating_test_filter = False
+errors_updating_patch_filter = False
 
 #This is a required dictionary for Jira to know where to connect and to know to verify
 Options = {
@@ -56,25 +60,55 @@ def set_version_numbers():
 
 #This will update the patch filter
 def update_patch_filter():
+    global errors_updating_patch_filter
+
     jira = JIRA(options=Options, basic_auth=('jj@anbast.com', jira_token))
     patchJQL = 'project = PUR AND status = testing AND fixVersion >= 1.61.0 and fixVersion <=' + get_patch_version_number()
     patchJQL.join(get_patch_version_number())
     patchJQL = patchJQL.replace('\u0000', '').rstrip()
-    updatePatchFilter = jira.update_filter(19012, 'JiraProjectPatchQueue', 'Updated Patch Queue with Script', patchJQL[:-2])
+    try:
+        updatePatchFilter = jira.update_filter(19012, 'JiraProjectPatchQueue', 'Updated Patch Queue with Script', patchJQL[:-2])
+    except JIRAError as e:
+        blocks = None
+        requests.post('https://slack.com/api/chat.postMessage', {
+        'token': slack_token,
+        'channel': slack_channel,
+        'text': 'Error whilst updating Patch filter! ' + e.text,
+        'username': 'JiraUpdateTestingQueues',
+        'blocks': json.dumps(blocks) if blocks else None
+    }).json()
+        errors_updating_patch_filter = True
 
 #This will update the test filter
 def update_test_filter():
+    global errors_updating_test_filter
+
     jira = JIRA(options=Options, basic_auth=('jj@anbast.com', jira_token))
     testJQL = 'project = PUR AND status = testing AND fixVersion >= 1.65.0 and fixVersion <=' + get_test_version_number()
     testJQL.join(get_test_version_number())
     testJQL = testJQL.replace('\u0000', '').rstrip()
-    updateTestFilter = jira.update_filter(19013, 'JiraProjectTestQueue', 'Updated Test Queue with Script', testJQL[:-2])
+    try:
+        updateTestFilter = jira.update_filter(19013, 'JiraProjectTestQueue', 'Updated Test Queue with Script', testJQL[:-2])
+
+    except JIRAError as e:
+        blocks = None
+        requests.post('https://slack.com/api/chat.postMessage', {
+        'token': slack_token,
+        'channel': slack_channel,
+        'text': 'Error whilst updating Test fiter! ' + e.text,
+        'username': 'JiraUpdateTestingQueues',
+        'blocks': json.dumps(blocks) if blocks else None
+    }).json()
+        errors_updating_test_filter = True
 
 #This will post a message to slack
 def post_message_to_slack(text, blocks = None):
     global test_version_changed
     global patch_version_changed
-    if test_version_changed == True & patch_version_changed == True:
+    global errors_updating_patch_filter
+    global errors_updating_test_filter
+
+    if test_version_changed and patch_version_changed and errors_updating_test_filter == False and errors_updating_patch_filter == False:
         return requests.post('https://slack.com/api/chat.postMessage', {
         'token': slack_token,
         'channel': slack_channel,
@@ -82,7 +116,7 @@ def post_message_to_slack(text, blocks = None):
         'username': 'JiraUpdateTestingQueues',
         'blocks': json.dumps(blocks) if blocks else None
     }).json()
-    elif test_version_changed == True:
+    elif test_version_changed and errors_updating_test_filter != True:
         return requests.post('https://slack.com/api/chat.postMessage', {
         'token': slack_token,
         'channel': slack_channel,
@@ -90,7 +124,9 @@ def post_message_to_slack(text, blocks = None):
         'username': 'JiraUpdateTestingQueues',
         'blocks': json.dumps(blocks) if blocks else None
     }).json()
-    elif patch_version_changed == True:
+    elif patch_version_changed and errors_updating_patch_filter != True:
+        if errors_updating_patch_filter:
+            pass
         return requests.post('https://slack.com/api/chat.postMessage', {
         'token': slack_token,
         'channel': slack_channel,
@@ -102,20 +138,33 @@ def post_message_to_slack(text, blocks = None):
     patch_version_changed = False
 
 def mainLogic():
+    # if errors_updating_test_filter:
+    #     print('Errors updating test filter')
+    # elif errors_updating_patch_filter:
+    #     print('Errors updating patch filter!')
+
     if test_version_changed == True:
         update_test_filter()
-        
-        print("updated test filter")
+        if errors_updating_test_filter:
+            print('Errors updating_test_filter')
+        else:
+            print("updated test filter")
     else:
         print("patch version not changed")
 
     if patch_version_changed == True:
         update_patch_filter()
-        print("updated patch filter")
+        if errors_updating_patch_filter:
+            print('Errors updating patch filter')
+        else:
+            print("updated patch filter")
     else:
         print("test filter not changed")
 
 #Function calls
 set_version_numbers()
 mainLogic()
-post_message_to_slack('testing')
+if errors_updating_patch_filter and errors_updating_test_filter:
+    sys.exit(1)
+else:
+    post_message_to_slack('testing')
