@@ -88,7 +88,7 @@ def update_test_filter():
         requests.post('https://slack.com/api/chat.postMessage', {
         'token': slack_token,
         'channel': slack_channel,
-        'text': e.text,
+        'text': 'Error! ' + e.text,
         'username': 'JiraUpdateTestingQueues',
         'blocks': json.dumps(blocks) if blocks else None
     }).json()
