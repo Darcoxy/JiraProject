@@ -60,7 +60,10 @@ def update_patch_filter():
     patchJQL = 'project = PUR AND status = testing AND fixVersion >= 1.61.0 and fixVersion <=' + get_patch_version_number()
     patchJQL.join(get_patch_version_number())
     patchJQL = patchJQL.replace('\u0000', '').rstrip()
-    updatePatchFilter = jira.update_filter(19012, 'JiraProjectPatchQueue', 'Updated Patch Queue with Script', patchJQL[:-2])
+    try:
+        updatePatchFilter = jira.update_filter(19012, 'JiraProjectPatchQueue', 'Updated Patch Queue with Script', patchJQL[:-2])
+    except:
+        print('An error occured!')
 
 #This will update the test filter
 def update_test_filter():
@@ -68,7 +71,10 @@ def update_test_filter():
     testJQL = 'project = PUR AND status = testing AND fixVersion >= 1.65.0 and fixVersion <=' + get_test_version_number()
     testJQL.join(get_test_version_number())
     testJQL = testJQL.replace('\u0000', '').rstrip()
-    updateTestFilter = jira.update_filter(19013, 'JiraProjectTestQueue', 'Updated Test Queue with Script', testJQL[:-2])
+    try:
+        updateTestFilter = jira.update_filter(19013, 'JiraProjectTestQueue', 'Updated Test Queue with Script', testJQL[:-2])
+    except:
+        print('An error occured!')
 
 #This will post a message to slack
 def post_message_to_slack(text, blocks = None):
