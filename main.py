@@ -46,13 +46,11 @@ def update_released_patch_version():
     f = open('current_versions.txt', 'w')
     f.write(version + '\n' + ',')
     f.close()
-    print()
 
 def update_released_test_version():
     version = get_test_version_number()
     f = open('current_versions.txt', 'a')
     f.write(version)
-    print()
 
 def set_released_test_version():
     data = Path('current_versions.txt').read_text(encoding='utf-16 LE')
