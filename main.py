@@ -116,9 +116,7 @@ def post_message_to_slack(text, blocks = None):
         'username': 'JiraUpdateTestingQueues',
         'blocks': json.dumps(blocks) if blocks else None
     }).json()
-    elif test_version_changed:
-        if errors_updating_test_filter:
-            pass
+    elif test_version_changed and errors_updating_test_filter != True:
         return requests.post('https://slack.com/api/chat.postMessage', {
         'token': slack_token,
         'channel': slack_channel,
@@ -126,7 +124,7 @@ def post_message_to_slack(text, blocks = None):
         'username': 'JiraUpdateTestingQueues',
         'blocks': json.dumps(blocks) if blocks else None
     }).json()
-    elif patch_version_changed:
+    elif patch_version_changed and errors_updating_patch_filter != True:
         if errors_updating_patch_filter:
             pass
         return requests.post('https://slack.com/api/chat.postMessage', {
