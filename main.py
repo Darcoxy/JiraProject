@@ -3,6 +3,7 @@ import json
 import sys
 import requests
 from jira import JIRA
+from jira import JIRAError
 from ssl import Options
 from pathlib import Path
 
@@ -73,11 +74,11 @@ def update_test_filter():
     testJQL = 'project = PUR AND status = testing AND fixVersion >= 1.65.0 and fixVersion <=' + get_test_version_number()
     testJQL.join(get_test_version_number())
     testJQL = testJQL.replace('\u0000', '').rstrip()
-    try:
-        updateTestFilter = jira.update_filter(19013, 'JiraProjectTestQueue', 'Updated Test Queue with Script', testJQL[:-2])
-    except:
-        print('An error occured!')
-        sys.exit(1)
+    #try:
+    updateTestFilter = jira.update_filter(19013, 'JiraProjectTestQueue', 'Updated Test Queue with Script', testJQL[:-2])
+    #except:
+    #    print('An error occured!')
+    #    sys.exit(1)
 
 #This will post a message to slack
 def post_message_to_slack(text, blocks = None):
