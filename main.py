@@ -65,7 +65,14 @@ def update_patch_filter():
     try:
         updatePatchFilter = jira.update_filter(19012, 'JiraProjectPatchQueue', 'Updated Patch Queue with Script', patchJQL[:-2])
     except JIRAError as e:
-        print(e.text)
+        blocks = None
+        requests.post('https://slack.com/api/chat.postMessage', {
+        'token': slack_token,
+        'channel': slack_channel,
+        'text': e.text,
+        'username': 'JiraUpdateTestingQueues',
+        'blocks': json.dumps(blocks) if blocks else None
+    }).json()
         sys.exit(1)
 
 #This will update the test filter
@@ -77,7 +84,15 @@ def update_test_filter():
     try:
         updateTestFilter = jira.update_filter(19013, 'JiraProjectTestQueue', 'Updated Test Queue with Script', testJQL[:-2])
     except JIRAError as e:
-        print(e.text)
+        blocks = None
+        requests.post('https://slack.com/api/chat.postMessage', {
+        'token': slack_token,
+        'channel': slack_channel,
+        'text': e.text,
+        'username': 'JiraUpdateTestingQueues',
+        'blocks': json.dumps(blocks) if blocks else None
+    }).json()
+        #print(e.text)
         sys.exit(1)
 
 #This will post a message to slack
