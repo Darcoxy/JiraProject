@@ -69,11 +69,11 @@ def update_patch_filter():
         requests.post('https://slack.com/api/chat.postMessage', {
         'token': slack_token,
         'channel': slack_channel,
-        'text': e.text,
+        'text': 'Error whilst updating Patch filter! ' + e.text,
         'username': 'JiraUpdateTestingQueues',
         'blocks': json.dumps(blocks) if blocks else None
     }).json()
-        sys.exit(1)
+        return False
 
 #This will update the test filter
 def update_test_filter():
@@ -88,12 +88,11 @@ def update_test_filter():
         requests.post('https://slack.com/api/chat.postMessage', {
         'token': slack_token,
         'channel': slack_channel,
-        'text': 'Error! ' + e.text,
+        'text': 'Error whilst updating Test fiter! ' + e.text,
         'username': 'JiraUpdateTestingQueues',
         'blocks': json.dumps(blocks) if blocks else None
     }).json()
-        #print(e.text)
-        sys.exit(1)
+        return False
 
 #This will post a message to slack
 def post_message_to_slack(text, blocks = None):
@@ -127,6 +126,10 @@ def post_message_to_slack(text, blocks = None):
     patch_version_changed = False
 
 def mainLogic():
+    if  update_patch_filter and update_test_filter:
+        print('No filters updated!')
+        sys.exit(1)
+
     if test_version_changed == True:
         update_test_filter()
         
