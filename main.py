@@ -10,7 +10,7 @@ from pathlib import Path
 #Global Variables
 slack_token = os.getenv('SLACKAPITOKEN')
 jira_token = os.getenv('JIRAAPITOKEN')
-slack_channel = '#testerskie_ploty'
+slack_channel = '#testing_bot'
 test_filter_url = 'https://anbast.atlassian.net/issues/?filter=19013'
 patch_filter_url = 'https://anbast.atlassian.net/issues/?filter=19012'
 both_filters_url = test_filter_url + '\n ' + patch_filter_url
