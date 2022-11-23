@@ -11,8 +11,8 @@ from pathlib import Path
 slack_token = os.getenv('SLACKAPITOKEN')
 jira_token = os.getenv('JIRAAPITOKEN')
 slack_channel = '#testing_bot'
-test_filter_url = 'https://anbast.atlassian.net/issues/?filter=19013'
-patch_filter_url = 'https://anbast.atlassian.net/issues/?filter=19012'
+test_filter_url = " Tickets open in Test: " + 'https://anbast.atlassian.net/issues/?filter=19013'
+patch_filter_url = "Tickets open in Patch: " + 'https://anbast.atlassian.net/issues/?filter=19012'
 both_filters_url = test_filter_url + '\n ' + patch_filter_url
 released_patch_version = ''
 released_test_version = ''
